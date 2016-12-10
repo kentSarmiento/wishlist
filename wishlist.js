@@ -1,4 +1,5 @@
 const PORT_NUM = 8080;
+const PASS_LENGTH = 10;
 
 var http = require('http');
 var fs = require('fs');
@@ -42,7 +43,8 @@ function display_form(res) {
 
 function upload_form(req, res) {
   var body = '';
-  var authenticate = new eventemitter(); // For authentication process
+  var dec = '';
+  var authenticate = new eventemitter();  // For authentication process
 
   req.on('data', function (chunk) {
     body += chunk.toString();
@@ -51,12 +53,18 @@ function upload_form(req, res) {
     res.writeHead(200, {
       'Content-Type': 'text/html',
     });
-    var dec = querystring.parse(body);
+    dec = querystring.parse(body);
     check_user(dec, authenticate);
   });
 
-  authenticate.on('auth', function () {
-    res.write('<html><body>You are authorized!</body></html>');
+  authenticate.on('auth', function (password) {
+    if (password == '') {
+      res.write('<html><body>You are authorized! Your wish is our command!</body></html>');
+    }
+    else {
+      res.write('<html><body>You are now authorized with ' + password + '!</body></html>');
+    }
+    make_wish(dec);
     res.end();
   });
   authenticate.on('unauth', function () {
@@ -66,20 +74,41 @@ function upload_form(req, res) {
 }
 
 function check_user(dec, authenticate) {
-  var ret = false;
+  var valid = false;
+  var found = false;
+  var empty = false;
+
+  if (dec.password == '') {
+    empty = true;
+  }
 
   /* Check if user is authorized */
   var rl = readline.createInterface({input: fs.createReadStream('passwd')});
   rl.on('line', function (line) {
     line = querystring.parse(line);
     if (dec.name == line.name && dec.password == line.password) {
-      ret = true;
+      valid = true;
+    }
+    else if (dec.name == line.name) {
+      found = true;
     }
   });
 
   rl.on('close', function () {
-    if (ret == true) {
-      authenticate.emit('auth');
+    if (valid == true) {
+      authenticate.emit('auth', '');
+    }
+    else if (found == true) {
+      authenticate.emit('unauth');
+    }
+    else if (empty == true) {
+      var password = generate_password();
+      var newline = 'name=' + dec.name + '&password=' + password + '\n';
+      console.log(newline);
+      fs.appendFile('passwd', newline, function (err) {
+        if (err) throw err;
+      });
+      authenticate.emit('auth', password);
     }
     else {
       authenticate.emit('unauth');
@@ -87,8 +116,31 @@ function check_user(dec, authenticate) {
   });
 }
 
+function generate_password() {
+  var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP1234567890";
+  var password = "";
+
+  for (var count = 0; count < PASS_LENGTH; count++) {
+    var index = Math.floor(Math.random() * chars.length);
+    password += chars.charAt(index);
+  }
+
+  return password;
+}
+
 function make_wish(dec) {
+  var filename = dec.name + '.txt';
+  var filedata = '';
+
   /* Write file for wish */
+  filedata += 'wish1=' + dec.wish1 + '&';
+  filedata += 'wish2=' + dec.wish2 + '&';
+  filedata += 'wish3=' + dec.wish3;
+  console.log(filedata);
+
+  fs.writeFile(filename, filedata, function (err) {
+    if (err) throw err;
+  });
 }
 
 function display_list(res) {
