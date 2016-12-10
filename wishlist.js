@@ -144,7 +144,52 @@ function make_wish(dec) {
 }
 
 function display_list(res) {
+  var parse_all = new eventemitter(); // For parsing wishes
 
+  parse_files(parse_all);
+
+  parse_all.on('finished', function (list) {
+    res.write('<html><body>' + list + '</body></html>');
+    res.end();
+  });
+}
+
+function parse_files(parse_all) {
+  var list = '';
+  var total = 0;        // Total files to parse
+  var finished = 0;     // Files already parsed
+
+  /* Read passwd file for list of all codenames */
+  var rl = readline.createInterface({input: fs.createReadStream('passwd')});
+  rl.on('line', function (line) {
+    total++;
+    line = querystring.parse(line);
+    var filename = line.name + '.txt';
+    var parse_one = new eventemitter(); // For parsing each file
+
+    parse_file(filename, parse_one);
+
+    parse_one.on('wish', function (line2) {
+      list += 'codename=' + line.name + ': ';
+      list += line2; // New line is disregarded
+      list += '<br />';
+      console.log(list);
+      console.log(finished);
+      finished++;
+
+      /* Parsing of all files is finished */
+      if (total == finished) {
+        parse_all.emit('finished', list);
+      }
+    });
+  });
+}
+
+function parse_file(filename, parse_one) {
+  fs.readFile(filename, function (err, data) {
+    if (err) throw err;
+    parse_one.emit('wish', data);
+  });
 }
 
 server.listen(PORT_NUM, listening);
