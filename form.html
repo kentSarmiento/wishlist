@@ -1,0 +1,42 @@
+<html>
+  <title>
+    Wish List Application
+  </title>
+  <body>
+    <center>
+
+      <marquee width=500 scrollamount=5 behavior=alternate>
+        <h1> DG1.3 Christmas Party </h1>
+      </marquee>
+        <br />
+        <b> Wish List Application </b>
+        <br />
+        Powered by Node.JS Development Team
+
+        <hr>
+
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" size="37" placeholder="Enter your name e.g. Oyih" />
+            <br />
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" size="33" placeholder="Enter your password" />
+            <br /><br />
+            <label for="codename">Codename:</label>
+            <input type="codename" id="codename" name="codename" size="32" placeholder="Enter your codename e.g. Clark Kent" />
+            <br /><br />
+            <label for="wish1">Wish 1:</label>
+            <textarea id="wish1" name="wish1" placeholder="Enter your first wish" /></textarea>
+            <br />
+            <label for="wish2">Wish 2:</label>
+            <textarea id="wish2" name="wish2" placeholder="Enter your second wish" /></textarea>
+            <br />
+            <label for="wish3">Wish 3:</label>
+            <textarea id="wish3" name="wish3" placeholder="Enter your third wish" /></textarea>
+            <br /><br />
+            <input type="submit" value="Make a wish!" />
+        </form>
+
+    </center>
+  </body>
+</html>
