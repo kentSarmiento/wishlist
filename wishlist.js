@@ -1,4 +1,5 @@
 const PORT_NUM = 8080;
+const DICTIONARY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 const PASS_LENGTH = 10;
 
 var http = require('http');
@@ -117,12 +118,11 @@ function check_user(dec, authenticate) {
 }
 
 function generate_password() {
-  var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP1234567890";
   var password = "";
 
   for (var count = 0; count < PASS_LENGTH; count++) {
-    var index = Math.floor(Math.random() * chars.length);
-    password += chars.charAt(index);
+    var index = Math.floor(Math.random() * DICTIONARY.length);
+    password += DICTIONARY.charAt(index);
   }
 
   return password;
