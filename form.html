@@ -3,47 +3,45 @@
 <head>
 <title>WISHLIST APP</title>
 <meta name="author" content="your name" />
-<meta name="description" content="" />	
-<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8081/katstyle.css">	
+<meta name="description" content="" />
+<link rel="stylesheet" type="text/css" href="http://192.168.1.13:8081/katstyle.css">
 </head>
-<body style="background-image: url(http://127.0.0.1:8081/bg.jpg);">
-	<div id="page">
-		<div id="nav">
-			<ul>
-				<li><a href="form.html"><b>MAKE A WISH</b></a></li> |
-				<li><a href="/view"><b>VIEW WISHES</b></a></li>
-			</ul>	
-		</div>
-		<hr/>
-		<div id="logo">
-			<marquee width=500 scrollamount=5 behavior=alternate>
-                        <h1><b> DG1.3 CHRISTMAS PARTY !</b> </h1>
-                        </marquee>
-                        <br />
-                        <b> Powered by Node.JS Development Team</b> 
-		</div>
-		<div id="content">
-			<form action="/upload" method="post" enctype="application/json">
-                <label for="name">CODENAME:</label>
-                <input type="text" id="name" name="name" size="37" placeholder="Enter your codename e.g. Oyih"/><br />
-                <label for="password">PASSWORD:</label>
-                <input type="password" id="password" name="password" size="33" placeholder="Enter your password"/>
-                <br /><br />
-                <label for="wish1">WISH 1:</label>
-                <textarea id="wish1" name="wish1" placeholder="Enter your first wish" /></textarea>
-                <br />
-                <label for="wish2">WISH 2:</label>
-                <textarea id="wish2" name="wish2" placeholder="Enter your second wish" /></textarea>
-                <br />
-                <label for="wish3">WISH 3:</label>
-                <textarea id="wish3" name="wish3" placeholder="Enter your third wish" /></textarea>
-                <br /><br />
-                <center><input type="submit" value="Make a wish!" /></center>
-                </form>
-		</div>
-		<div id="footer">
-		   <p>Webpage made by <a href="/" target="_blank">Node.JS Development Team</a></p>
-		</div>
-	</div>
+<body style="background-image: url(http://192.168.1.13:8081/bg.jpg);">
+  <div id="page">
+    <div id="nav">
+      <ul>
+        <li><a href="/"><b>MAKE A WISH</b></a></li> |
+        <li><a href="/view"><b>VIEW WISHES</b></a></li>
+      </ul>
+    </div>
+    <hr/>
+    <div id="logo">
+      <marquee width=500 scrollamount=5 behavior=alternate>
+        <h1><b> DG1.3 CHRISTMAS PARTY !</b> </h1>
+      </marquee>
+    </div>
+    <div id="content">
+      <form action="/upload" method="post" enctype="application/json">
+        <label for="name">CODENAME:</label>
+        <input type="text" id="name" name="name" size="37" placeholder="Enter your codename e.g. Oyih"/><br />
+        <label for="password">PASSWORD:</label>
+        <input type="password" id="password" name="password" size="33" placeholder="Enter your password"/>
+        <br /><br />
+        <label for="wish1">WISH 1:</label>
+        <textarea id="wish1" name="wish1" placeholder="Enter your first wish" /></textarea>
+        <br />
+        <label for="wish2">WISH 2:</label>
+        <textarea id="wish2" name="wish2" placeholder="Enter your second wish" /></textarea>
+        <br />
+        <label for="wish3">WISH 3:</label>
+        <textarea id="wish3" name="wish3" placeholder="Enter your third wish" /></textarea>
+        <br /><br />
+        <center><input type="submit" value="Make a wish!" /></center>
+      </form>
+    </div>
+    <div id="footer">
+      <p>Webpage made by <a href="/" target="_blank">Node.JS Development Team</a></p>
+    </div>
+  </div>
 </body>
 </html>

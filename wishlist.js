@@ -1,16 +1,14 @@
+const ISDEBUG = true;
 const PORT_NUM = 8080;
 const DICTIONARY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 const PASS_LENGTH = 10;
 const COMMENT_EXT = '_com.txt';
-
 
 var http = require('http');
 var fs = require('fs');
 var querystring = require('querystring');
 var readline = require('readline');
 var eventemitter = require('events').EventEmitter;
-var express = require('express');
-var path = require('path');
 
 var server = http.createServer();
 
@@ -113,7 +111,7 @@ function check_user(dec, authenticate) {
     else if (empty == true) {
       var password = generate_password();
       var newline = 'name=' + dec.name + '&password=' + password + '\n';
-      console.log(newline);
+      ISDEBUG&&console.log(newline);
       fs.appendFile('passwd', newline, function (err) {
         if (err) throw err;
       });
@@ -141,25 +139,42 @@ function make_wish(dec) {
   var filedata = '';
 
   /* Write file for wish */
-  filedata += 'wish1=' + dec.wish1 + '&';
-  filedata += 'wish2=' + dec.wish2 + '&';
-  filedata += 'wish3=' + dec.wish3;
-  console.log(filedata);
-
+  filedata += '<center><h2><b>Codename:</b> ' + dec.name + '</h2></center>\n';
+  filedata += '\n<b>Wish 1:</b>\n' + dec.wish1 + '\n';
+  filedata += '\n<b>Wish 2:</b>\n' + dec.wish2 + '\n';
+  filedata += '\n<b>Wish 3:</b>\n' + dec.wish3 + '\n';
+  filedata = filedata.replace(/(?:\r\n|\r|\n)/g, '<br />');
+  ISDEBUG&&console.log(filedata);
   fs.writeFile(filename, filedata, function (err) {
+    if (err) throw err;
+  });
+
+  /* Write file for comment */
+  filename = dec.name + COMMENT_EXT;
+  fs.writeFile(filename, '', function (err) {
     if (err) throw err;
   });
 }
 
 function display_list(res) {
   var parse_all = new eventemitter(); // For parsing wishes
+  var full = '';
 
   parse_files(parse_all);
 
   parse_all.on('finished', function (list) {
-    //res.write('<html><body>' + list + '</body></html>');
-    document.content.wishes.wishlist.value = list;
-    res.end();
+    fs.readFile('views_start.html', function (err, data) {
+      res.writeHead(200, {
+        'Content-Type': 'text/html',
+      });
+      full += data;
+      full += list;
+      fs.readFile('views_end.html', function (err, data) {
+        full += data;
+        res.write(full);
+        res.end();
+      });
+    });
   });
 }
 
@@ -179,15 +194,18 @@ function parse_files(parse_all) {
     parse_file(filename, parse_one);
 
     filename = line.name + COMMENT_EXT;
-    parse_one = new eventemitter(); // For parsing each comment file
-    parse_file(filename, parse_one);
+    var parse_two = new eventemitter(); // For parsing each comment file
+    parse_file(filename, parse_two);
 
-    parse_one.on('wish', function (line2) {
-      list += 'codename=' + line.name + ': ';
-      list += line2; // New line is disregarded
-      list += '<br />';
-      console.log(list);
-      console.log(finished);
+    parse_one.on('wish', function (line2, type) {
+      list += '<div id="content">';
+      list += line2;
+      finished++;
+    });
+
+    parse_two.on('wish', function (line2, type) {
+      list += line2;
+      list += '</div>';
       finished++;
 
       /* Parsing of all files is finished */
@@ -198,10 +216,10 @@ function parse_files(parse_all) {
   });
 }
 
-function parse_file(filename, parse_one) {
+function parse_file(filename, parse_n) {
   fs.readFile(filename, function (err, data) {
     if (err) throw err;
-    parse_one.emit('wish', data);
+    parse_n.emit('wish', data);
   });
 }
 
@@ -218,8 +236,8 @@ function send_comment(req, res) {
     });
     dec = querystring.parse(body);
     write_comment(dec);
-    res.end();
-  }
+    display_list(res);
+  });
 }
 
 function write_comment(dec) {
@@ -227,9 +245,10 @@ function write_comment(dec) {
   var filedata = '';
 
   /* Write file for comment */
-  filedata += 'comment=' + dec.comment + '&';
-  console.log(filedata);
-
+  filedata += '<br /><hr>';
+  filedata += '\n<b>Comment:</b>\n' + dec.comment + '\n';
+  filedata = filedata.replace(/(?:\r\n|\r|\n)/g, '<br />');
+  ISDEBUG&&console.log(filedata);
   fs.appendFile(filename, filedata, function (err) {
     if (err) throw err;
   });

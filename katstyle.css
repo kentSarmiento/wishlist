@@ -8,8 +8,9 @@ p{
 marquee{ padding: 5px 5px;}
 hr
 {
-    width: 800px;
-    color: #0FADC4;
+    height: 10px;
+    border: 0;
+    box-shadow: 0 10px 10px -10px #8c8b8b inset;
 }
 h1, h2, h3, h4{
     color: #b44447;
@@ -32,7 +33,7 @@ body{
 #page{ margin: 20px; }
 #logo{
 	width: 100%;
-	margin-top: 5px;
+	margin-top: 15px;
 	font-family: Arial;
 	display: inline-block;
 	color: #66c594;
@@ -41,9 +42,7 @@ body{
 #nav{
 	width: 100%;
 	display: inline-block;
-	/*text-align: center;*/
-	padding-left: 300px;
-	padding-right: 300px; 
+	text-align: center;
 }
 	#nav ul{}
 		#nav ul li{
