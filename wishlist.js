@@ -64,19 +64,41 @@ function upload_form(req, res) {
     check_user(dec, authenticate);
   });
 
+  var sample = '<div id="content">';
   authenticate.on('auth', function (password) {
     if (password == '') {
-      res.write('<html><body>You are authorized! Your wish is our command!</body></html>');
+      sample += 'You are authorized! Your wish is our command!';
     }
     else {
-      res.write('<html><body>You are now authorized with ' + password + '!</body></html>');
+      sample += 'You are now authorized with ' + password + '!';
     }
+    sample += '</div>';
     make_wish(dec);
-    res.end();
+    console.log(sample);
+    display_message(res, sample);
   });
   authenticate.on('unauth', function () {
-    res.write('<html><body>You are not authorized!</body></html>');
-    res.end();
+    sample += 'You are not authorized!';
+    sample += '</div>';
+    display_message(res, sample);
+  });
+}
+
+function display_message (res, sample) {
+  var full = '';
+  console.log('here sample ' + sample);
+
+  fs.readFile('./html/views_start.html', function (err, data) {
+    res.writeHead(200, {
+      'Content-Type': 'text/html',
+    });
+    full += data;
+    full += sample;
+    fs.readFile('./html/footer.html', function (err, data) {
+      full += data;
+      res.write(full);
+      res.end();
+    });
   });
 }
 
