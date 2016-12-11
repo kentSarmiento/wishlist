@@ -151,9 +151,11 @@ function make_wish(dec) {
 
   /* Write file for comment */
   filename = './data/' + dec.name + COMMENT_EXT;
-  fs.writeFile(filename, '', function (err) {
-    if (err) throw err;
-  });
+  if (! fs.existsSync(filename)) {
+    fs.writeFile(filename, '', function (err) {
+      if (err) throw err;
+    });
+  }
 }
 
 function display_list(res) {
