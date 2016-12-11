@@ -38,7 +38,7 @@ function request_handler(req, res) {
 }
 
 function display_form(res) {
-  fs.readFile('form.html', function (err, data) {
+  fs.readFile('./html/form.html', function (err, data) {
     res.writeHead(200, {
       'Content-Type': 'text/html',
       'Content-Length': data.length
@@ -90,7 +90,7 @@ function check_user(dec, authenticate) {
   }
 
   /* Check if user is authorized */
-  var rl = readline.createInterface({terminal: false, input: fs.createReadStream('passwd')});
+  var rl = readline.createInterface({terminal: false, input: fs.createReadStream('./data/passwd')});
   rl.on('line', function (line) {
     line = querystring.parse(line);
     if (dec.name == line.name && dec.password == line.password) {
@@ -112,7 +112,7 @@ function check_user(dec, authenticate) {
       var password = generate_password();
       var newline = 'name=' + dec.name + '&password=' + password + '\n';
       ISDEBUG&&console.log(newline);
-      fs.appendFile('passwd', newline, function (err) {
+      fs.appendFile('./data/passwd', newline, function (err) {
         if (err) throw err;
       });
       authenticate.emit('auth', password);
@@ -135,7 +135,7 @@ function generate_password() {
 }
 
 function make_wish(dec) {
-  var filename = dec.name + '.txt';
+  var filename = './data/' + dec.name + '.txt';
   var filedata = '';
 
   /* Write file for wish */
@@ -150,7 +150,7 @@ function make_wish(dec) {
   });
 
   /* Write file for comment */
-  filename = dec.name + COMMENT_EXT;
+  filename = './data/' + dec.name + COMMENT_EXT;
   fs.writeFile(filename, '', function (err) {
     if (err) throw err;
   });
@@ -163,13 +163,13 @@ function display_list(res) {
   parse_files(parse_all);
 
   parse_all.on('finished', function (list) {
-    fs.readFile('views_start.html', function (err, data) {
+    fs.readFile('./html/views_start.html', function (err, data) {
       res.writeHead(200, {
         'Content-Type': 'text/html',
       });
       full += data;
       full += list;
-      fs.readFile('views_end.html', function (err, data) {
+      fs.readFile('./html/views_end.html', function (err, data) {
         full += data;
         res.write(full);
         res.end();
@@ -184,16 +184,16 @@ function parse_files(parse_all) {
   var finished = 0;     // Files already parsed
 
   /* Read passwd file for list of all codenames */
-  var rl = readline.createInterface({input: fs.createReadStream('passwd')});
+  var rl = readline.createInterface({input: fs.createReadStream('./data/passwd')});
   rl.on('line', function (line) {
     total += 2; // For both wish and comments
     line = querystring.parse(line);
 
-    var filename = line.name + '.txt';
+    var filename = './data/' + line.name + '.txt';
     var parse_one = new eventemitter(); // For parsing each wish file
     parse_file(filename, parse_one);
 
-    filename = line.name + COMMENT_EXT;
+    filename = './data/' + line.name + COMMENT_EXT;
     var parse_two = new eventemitter(); // For parsing each comment file
     parse_file(filename, parse_two);
 
@@ -241,7 +241,7 @@ function send_comment(req, res) {
 }
 
 function write_comment(dec) {
-  var filename = dec.name + COMMENT_EXT;
+  var filename = './data/' + dec.name + COMMENT_EXT;
   var filedata = '';
 
   /* Write file for comment */
