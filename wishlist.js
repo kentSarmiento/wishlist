@@ -88,7 +88,7 @@ function display_message (res, sample) {
   var full = '';
   console.log('here sample ' + sample);
 
-  fs.readFile('./html/views_start.html', function (err, data) {
+  fs.readFile('./html/header.html', function (err, data) {
     res.writeHead(200, {
       'Content-Type': 'text/html',
     });
@@ -187,16 +187,19 @@ function display_list(res) {
   parse_files(parse_all);
 
   parse_all.on('finished', function (list) {
-    fs.readFile('./html/views_start.html', function (err, data) {
+    fs.readFile('./html/header.html', function (err, data) {
       res.writeHead(200, {
         'Content-Type': 'text/html',
       });
       full += data;
       full += list;
-      fs.readFile('./html/views_end.html', function (err, data) {
+      fs.readFile('./html/comments.html', function (err, data) {
         full += data;
-        res.write(full);
-        res.end();
+        fs.readFile('./html/footer.html', function (err, data) {
+          full += data;
+          res.write(full);
+          res.end();
+        });
       });
     });
   });
