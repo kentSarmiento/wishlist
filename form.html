@@ -1,39 +1,145 @@
+<!DOCTYPE html>
 <html>
-  <title>
-    Wish List Application
-  </title>
-  <body>
-    <center>
+<head>
 
-      <marquee width=500 scrollamount=5 behavior=alternate>
-        <h1> DG1.3 Christmas Party </h1>
-      </marquee>
-        <br />
-        <b> Wish List Application </b> | <a href="/view"> View all wishes</a>
-        <br />
-        Powered by Node.JS Development Team
-        <br />
+<!-- your webpage info goes here -->
 
-        <hr>
+    <title>My First Website</title>
+	
+	<meta name="author" content="your name" />
+	<meta name="description" content="" />
 
-        <form action="/upload" method="post" enctype="application/json">
-            <label for="name">Codename:</label>
-            <input type="text" id="name" name="name" size="37" placeholder="Enter your codename e.g. Oyih" />
-            <br />
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" size="33" placeholder="Enter your password" />
-            <br /><br />
-            <label for="wish1">Wish 1:</label>
-            <textarea id="wish1" name="wish1" placeholder="Enter your first wish" /></textarea>
-            <br />
-            <label for="wish2">Wish 2:</label>
-            <textarea id="wish2" name="wish2" placeholder="Enter your second wish" /></textarea>
-            <br />
-            <label for="wish3">Wish 3:</label>
-            <textarea id="wish3" name="wish3" placeholder="Enter your third wish" /></textarea>
-            <br /><br />
-            <input type="submit" value="Make a wish!" />
-        </form>
-    </center>
-  </body>
+<!-- you should always add your stylesheet (css) in the head tag so that it starts loading before the page html is being displayed -->	
+	
+<style>
+/*
+* multi-line comment
+*/
+p{ line-height: 1em; }
+h1, h2, h3, h4{
+    color: red;
+	font-weight: normal;
+	line-height: 1.1em;
+	margin: 0 0 .5em 0;
+}
+h1{ font-size: 1.7em; }
+h2{ font-size: 1.5em; }
+a{
+	color: black;
+	text-decoration: none;
+}
+	a:hover,
+	a:active{ text-decoration: underline; }
+
+/* you can structure your code's white space so that it is as readable for when you come back in the future or for other people to read and edit quickly */
+
+body{
+    font-family: arial; font-size: 80%; line-height: 1.2em; width: 100%; margin: 0; 
+}
+/* you can put your code all in one line like above */
+#page{ margin: 20px; }
+
+/* or on different lines like below */
+#logo{
+	width: 100%;
+	margin-top: 5px;
+	font-family: Arial;
+	display: inline-block;
+	color: green;
+	text-align: center;
+}
+/* but try and be as concise as possible */
+#nav{
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+	float: right;
+}
+	#nav ul{}
+		#nav ul li{
+			display: inline-block;
+			height: 35px;
+		}
+			#nav ul li a{
+				padding: 20px;
+				color: green;
+			}
+			#nav ul li a:hover{
+				background-color: green;
+				color: white;
+			}
+			#nav ul li a:active{ background-color: #ff8f00; }
+
+#content{
+	margin: 30px 0;
+	background: white;
+	padding: 20px;
+	margin-left: 200px;
+	margin-right: 200px;
+	clear: both;
+}
+#footer{
+	border-bottom: 1px #ccc solid;
+	margin-bottom: 10px;
+}
+	#footer p{
+		text-align: right;
+		text-transform: uppercase;
+		font-size: 80%;
+		color: grey;
+	}
+
+/* multiple styles seperated by a , */
+#content{ opacity: 0.8;box-shadow: 0px 1px 1px #999; }
+</style>	
+</head>
+<body style="background-image: url(http://longwallpapers.com/Desktop-Wallpaper/christmas-snow-wallpaper-1080p-For-Desktop-Wallpaper.jpg);">
+
+<!-- webpage content goes here in the body -->
+      
+	<div id="page">
+	
+		<div id="nav">
+			<ul>
+				<li><a href="#/home.html">HOME</a></li>
+				<li><a href="#/about.html">ABOUT</a></li>
+				<li><a href="#/contact.html">CONTACT</a></li>
+			</ul>	
+		</div>
+		<div id="logo">
+			<marquee width=500 scrollamount=5 behavior=alternate>
+                        <h1> DG1.3 Christmas Party </h1>
+                        </marquee>
+                        <br />
+                        <b> Wish List Application </b> | <a href="/view"> View all wishes</a>
+                        <br />
+                        Powered by Node.JS Development Team
+                        <br />
+		</div>
+		<div id="content">
+			<form action="/upload" method="post" enctype="application/json">
+                <label for="name">Codename:</label>
+                <input type="text" id="name" name="name" size="37" placeholder="Enter your codename e.g. Oyih"/><br />
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" size="33" placeholder="Enter your password"/>
+                <br /><br />
+                <label for="wish1">Wish 1:</label>
+                <textarea id="wish1" name="wish1" placeholder="Enter your first wish" /></textarea>
+                <br />
+                <label for="wish2">Wish 2:</label>
+                <textarea id="wish2" name="wish2" placeholder="Enter your second wish" /></textarea>
+                <br />
+                <label for="wish3">Wish 3:</label>
+                <textarea id="wish3" name="wish3" placeholder="Enter your third wish" /></textarea>
+                <br /><br />
+                <input type="submit" value="Make a wish!" />
+                </form>
+		</div>
+		<div id="footer">
+			<p>
+				Webpage made by <a href="/" target="_blank">Node.JS Development Team</a>
+			</p>
+		</div>
+	</div>
+</body>
 </html>
