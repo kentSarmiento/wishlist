@@ -4,115 +4,41 @@
 <title>WISHLIST APP</title>
 <meta name="author" content="your name" />
 <meta name="description" content="" />	
-<style>
-p{ line-height: 1em; }
-h1, h2, h3, h4{
-    color: red;
-	font-weight: normal;
-	line-height: 1.1em;
-	margin: 0 0 .5em 0;
-}
-h1{ font-size: 1.7em; }
-h2{ font-size: 1.5em; }
-a{
-	color: black;
-	text-decoration: none;
-}
-	a:hover,
-	a:active{ text-decoration: underline; }
-
-body{
-    font-family: arial; font-size: 80%; line-height: 1.2em; width: 100%; margin: 0; 
-}
-#page{ margin: 20px; }
-#logo{
-	width: 100%;
-	margin-top: 5px;
-	font-family: Arial;
-	display: inline-block;
-	color: green;
-	text-align: center;
-}
-#nav{
-	width: 100%;
-	display: inline-block;
-	text-align: center;
-	float: right;
-}
-	#nav ul{}
-		#nav ul li{
-			display: inline-block;
-			height: 35px;
-		}
-			#nav ul li a{
-				padding: 20px;
-				color: green;
-			}
-			#nav ul li a:hover{
-				background-color: green;
-				color: white;
-			}
-			#nav ul li a:active{ background-color: #ff8f00; }
-
-#content{
-	margin: 30px 0;
-	background: white;
-	padding: 20px;
-	margin-left: 200px;
-	margin-right: 200px;
-	clear: both;
-}
-#footer{
-	border-bottom: 1px #ccc solid;
-	margin-bottom: 10px;
-}
-	#footer p{
-		text-align: right;
-		text-transform: uppercase;
-		font-size: 80%;
-		color: grey;
-	}
-
-
-#content{ opacity: 0.8;box-shadow: 0px 1px 1px #999; }
-</style>	
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8081/katstyle.css">	
 </head>
-<body style="background-image: url(http://longwallpapers.com/Desktop-Wallpaper/christmas-snow-wallpaper-1080p-For-Desktop-Wallpaper.jpg);">
+<body style="background-image: url(http://127.0.0.1:8081/bg.jpg);">
 	<div id="page">
 		<div id="nav">
 			<ul>
-				<li><a href="#/home.html">HOME</a></li>
-				<li><a href="#/about.html">ABOUT</a></li>
-				<li><a href="#/contact.html">CONTACT</a></li>
+				<li><a href="form.html"><b>MAKE A WISH</b></a></li> |
+				<li><a href="/view"><b>VIEW WISHES</b></a></li>
 			</ul>	
 		</div>
+		<hr/>
 		<div id="logo">
 			<marquee width=500 scrollamount=5 behavior=alternate>
-                        <h1> DG1.3 Christmas Party </h1>
+                        <h1><b> DG1.3 CHRISTMAS PARTY !</b> </h1>
                         </marquee>
                         <br />
-                        <b> Wish List Application </b> | <a href="/view"> View all wishes</a>
-                        <br />
-                        Powered by Node.JS Development Team
-                        <br />
+                        <b> Powered by Node.JS Development Team</b> 
 		</div>
 		<div id="content">
 			<form action="/upload" method="post" enctype="application/json">
-                <label for="name">Codename:</label>
+                <label for="name">CODENAME:</label>
                 <input type="text" id="name" name="name" size="37" placeholder="Enter your codename e.g. Oyih"/><br />
-                <label for="password">Password:</label>
+                <label for="password">PASSWORD:</label>
                 <input type="password" id="password" name="password" size="33" placeholder="Enter your password"/>
                 <br /><br />
-                <label for="wish1">Wish 1:</label>
+                <label for="wish1">WISH 1:</label>
                 <textarea id="wish1" name="wish1" placeholder="Enter your first wish" /></textarea>
                 <br />
-                <label for="wish2">Wish 2:</label>
+                <label for="wish2">WISH 2:</label>
                 <textarea id="wish2" name="wish2" placeholder="Enter your second wish" /></textarea>
                 <br />
-                <label for="wish3">Wish 3:</label>
+                <label for="wish3">WISH 3:</label>
                 <textarea id="wish3" name="wish3" placeholder="Enter your third wish" /></textarea>
                 <br /><br />
-                <input type="submit" value="Make a wish!" />
+                <center><input type="submit" value="Make a wish!" /></center>
                 </form>
 		</div>
 		<div id="footer">

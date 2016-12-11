@@ -2,11 +2,14 @@ const PORT_NUM = 8080;
 const DICTIONARY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 const PASS_LENGTH = 10;
 
+
 var http = require('http');
 var fs = require('fs');
 var querystring = require('querystring');
 var readline = require('readline');
 var eventemitter = require('events').EventEmitter;
+var express = require('express');
+var path = require('path');
 
 var server = http.createServer();
 
@@ -84,7 +87,7 @@ function check_user(dec, authenticate) {
   }
 
   /* Check if user is authorized */
-  var rl = readline.createInterface({input: fs.createReadStream('passwd')});
+  var rl = readline.createInterface({terminal: false, input: fs.createReadStream('passwd')});
   rl.on('line', function (line) {
     line = querystring.parse(line);
     if (dec.name == line.name && dec.password == line.password) {
@@ -149,7 +152,8 @@ function display_list(res) {
   parse_files(parse_all);
 
   parse_all.on('finished', function (list) {
-    res.write('<html><body>' + list + '</body></html>');
+    //res.write('<html><body>' + list + '</body></html>');
+    document.content.wishes.wishlist.value = list;
     res.end();
   });
 }
