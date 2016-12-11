@@ -1,6 +1,7 @@
 const PORT_NUM = 8080;
 const DICTIONARY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 const PASS_LENGTH = 10;
+const COMMENT_EXT = '_com.txt';
 
 
 var http = require('http');
@@ -30,6 +31,10 @@ function request_handler(req, res) {
     case '/view':
       console.log('Providing list');
       display_list(res);
+      break;
+    case '/comment':
+      console.log('Processing comments');
+      send_comment(req, res);
       break;
   }
 }
@@ -166,11 +171,15 @@ function parse_files(parse_all) {
   /* Read passwd file for list of all codenames */
   var rl = readline.createInterface({input: fs.createReadStream('passwd')});
   rl.on('line', function (line) {
-    total++;
+    total += 2; // For both wish and comments
     line = querystring.parse(line);
-    var filename = line.name + '.txt';
-    var parse_one = new eventemitter(); // For parsing each file
 
+    var filename = line.name + '.txt';
+    var parse_one = new eventemitter(); // For parsing each wish file
+    parse_file(filename, parse_one);
+
+    filename = line.name + COMMENT_EXT;
+    parse_one = new eventemitter(); // For parsing each comment file
     parse_file(filename, parse_one);
 
     parse_one.on('wish', function (line2) {
@@ -193,6 +202,36 @@ function parse_file(filename, parse_one) {
   fs.readFile(filename, function (err, data) {
     if (err) throw err;
     parse_one.emit('wish', data);
+  });
+}
+
+function send_comment(req, res) {
+  var body = '';
+  var dec = '';
+
+  req.on('data', function (chunk) {
+    body += chunk.toString();
+  });
+  req.on('end', function () {
+    res.writeHead(200, {
+      'Content-Type': 'text/html',
+    });
+    dec = querystring.parse(body);
+    write_comment(dec);
+    res.end();
+  }
+}
+
+function write_comment(dec) {
+  var filename = dec.name + COMMENT_EXT;
+  var filedata = '';
+
+  /* Write file for comment */
+  filedata += 'comment=' + dec.comment + '&';
+  console.log(filedata);
+
+  fs.appendFile(filename, filedata, function (err) {
+    if (err) throw err;
   });
 }
 
