@@ -9,6 +9,7 @@ var fs = require('fs');
 var querystring = require('querystring');
 var readline = require('readline');
 var eventemitter = require('events').EventEmitter;
+var url = require('url');
 
 var server = http.createServer();
 
@@ -17,6 +18,8 @@ function listening() {
 }
 
 function request_handler(req, res) {
+  var single='';
+
   switch(req.url) {
     case '/':
       console.log('Providing form');
@@ -28,12 +31,17 @@ function request_handler(req, res) {
       break;
     case '/view':
       console.log('Providing list');
-      display_list(res);
+      display_view_form(res);
       break;
     case '/comment':
       console.log('Processing comments');
       send_comment(req, res);
       break;
+  }
+
+  single = url.parse(req.url);
+  if (single.pathname == '/single') {
+    display_single_view(req, res);
   }
 }
 
@@ -84,7 +92,7 @@ function upload_form(req, res) {
   });
 }
 
-function display_message (res, sample) {
+function display_message(res, sample) {
   var full = '';
   console.log('here sample ' + sample);
 
@@ -180,6 +188,86 @@ function make_wish(dec) {
   }
 }
 
+function display_view_form(res) {
+  var full = '';
+
+  fs.readFile('./html/header.html', function (err, data) {
+    res.writeHead(200, {
+      'Content-Type': 'text/html',
+    });
+    full += data;
+
+    var rl = readline.createInterface({terminal: false, input: fs.createReadStream('./data/passwd')});
+    rl.on('line', function (line) {
+      line = querystring.parse(line);
+      full += '<a href=';
+      var link = '"/single?name=' + line.name;
+      link = decodeURIComponent( link.replace(/\ /g, '+') );
+      full += link += '">';
+      full += '<div id="content">';
+      full += line.name
+      full += '</div>';
+      full += '</a>';
+    });
+    rl.on('close', function () {
+      fs.readFile('./html/comments.html', function (err, data) {
+        full += data;
+        fs.readFile('./html/footer.html', function (err, data) {
+          full += data;
+          res.write(full);
+          res.end();
+        });
+      });
+    });
+  });
+}
+
+function display_single_view(req, res) {
+  var full = '';
+  var list = '';
+  var path = '';
+  var name = '';
+
+  fs.readFile('./html/header.html', function (err, data) {
+    res.writeHead(200, {
+      'Content-Type': 'text/html',
+    });
+    full += data;
+
+    path = req.url;
+    path = url.parse(path, true);
+    name = path.query.name;
+    name = decodeURIComponent( name.replace(/\+/g, ' ') );
+
+    var filename = './data/' + name + '.txt';
+    var parse_one = new eventemitter(); // For parsing each wish file
+    parse_file(filename, parse_one);
+
+    filename = './data/' + name + COMMENT_EXT;
+    var parse_two = new eventemitter(); // For parsing each comment file
+    parse_file(filename, parse_two);
+
+    parse_one.on('wish', function (line2, type) {
+      list += '<div id="content">';
+      list += line2;
+    });
+
+    parse_two.on('wish', function (line2, type) {
+      list += line2;
+      list += '</div>';
+      full += list;
+      fs.readFile('./html/comments.html', function (err, data) {
+        full += data;
+        fs.readFile('./html/footer.html', function (err, data) {
+          full += data;
+          res.write(full);
+          res.end();
+        });
+      });
+    });
+  });
+}
+
 function display_list(res) {
   var parse_all = new eventemitter(); // For parsing wishes
   var full = '';
@@ -224,13 +312,13 @@ function parse_files(parse_all) {
     var parse_two = new eventemitter(); // For parsing each comment file
     parse_file(filename, parse_two);
 
-    parse_one.on('wish', function (line2, type) {
+    parse_one.on('wish', function (line2) {
       list += '<div id="content">';
       list += line2;
       finished++;
     });
 
-    parse_two.on('wish', function (line2, type) {
+    parse_two.on('wish', function (line2) {
       list += line2;
       list += '</div>';
       finished++;
@@ -245,8 +333,15 @@ function parse_files(parse_all) {
 
 function parse_file(filename, parse_n) {
   fs.readFile(filename, function (err, data) {
-    if (err) throw err;
-    parse_n.emit('wish', data);
+    if (err && err.code == 'ENOENT' && filename.indexOf(COMMENT_EXT) > -1) {
+      parse_n.emit('wish', 'User does not exist!');
+    }
+    else if (err && err.code == 'ENOENT') {
+      parse_n.emit('wish', '');
+    }
+    else {
+      parse_n.emit('wish', data);
+    }
   });
 }
 
